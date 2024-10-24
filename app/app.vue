@@ -3,10 +3,10 @@
     <nav>
       <NuxtLink to="/">
         Home
-        </NuxtLink>
-      <NuxtLink to="/teams/5">
-        Team 5
-        </NuxtLink>
+      </NuxtLink>
+      <NuxtLink to="/teams">
+        Teams
+      </NuxtLink>
     </nav>
     <NuxtRouteAnnouncer />
     <NuxtPage />

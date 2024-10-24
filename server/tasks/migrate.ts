@@ -37,13 +37,14 @@ export default defineTask({
         };
         await run(`create table if not exists players as from read_csv(".data/csv/players.csv", auto_type_candidates=['FLOAT','VARCHAR'])`);
         await run(`create table if not exists teams as from read_csv(".data/csv/teams.csv", auto_type_candidates=['FLOAT','VARCHAR'])`);
+        await run (`create table if not exists divisions as from read_csv(".data/csv/divisions.csv", auto_type_candidates=['FLOAT','VARCHAR'])`);
         await run(`create table if not exists players_batting as select player_id,team_id,league_id,position,role,${scaleFn('batting')} from read_csv(".data/csv/players_batting.csv", auto_type_candidates=['FLOAT','VARCHAR'])`,);
         await run(`create table if not exists players_pitching as select player_id,team_id,league_id,position,role,${scaleFn('pitching')} from read_csv(".data/csv/players_pitching.csv", auto_type_candidates=['FLOAT','VARCHAR'])`,);
         await run(`create table if not exists players_fielding as select player_id,team_id,league_id,position,role,${scaleFn('fielding')} from read_csv(".data/csv/players_fielding.csv", auto_type_candidates=['FLOAT','VARCHAR'])`,);
         await run(`create table if not exists players_career_batting_stats as from read_csv(".data/csv/players_career_batting_stats.csv",  auto_type_candidates=['FLOAT','VARCHAR'])`);
         await run(`create table if not exists players_career_pitching_stats as from read_csv(".data/csv/players_career_pitching_stats.csv",  auto_type_candidates=['FLOAT','VARCHAR'])`);
         await run(`create table if not exists players_career_fielding_stats as from read_csv(".data/csv/players_career_fielding_stats.csv",  auto_type_candidates=['FLOAT','VARCHAR'])`);
-        const data = await all(`select * from players_batting where team_id = 5`);
+        const data = await all(`select * from teams`);
         db.close();
 
         return { result: "success", data };
