@@ -1,20 +1,45 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
+
+  modules: [
+    '@nuxt/eslint',
+    '@vueuse/nuxt',
+    'reka-ui/nuxt',
+    '@nuxtjs/html-validator',
+    '@unocss/nuxt',
+    '@nuxt/fonts',
+  ],
   devtools: { enabled: true },
-
-  future:{
-    compatibilityVersion: 4
+  app: {
+    head: {
+      htmlAttrs: {
+        lang: 'en',
+      },
+      title: 'OOTP Baseball',
+    },
   },
-
-  nitro:{
-    experimental:{
-      tasks: true
-    }
+  css: ['@unocss/reset/tailwind.css'],
+  runtimeConfig: {
+    public: {
+      ootpWebsiteUrl: '',
+    },
   },
-  experimental:{
-    typedPages: true
+  future: {
+    compatibilityVersion: 4,
   },
+  experimental: {
+    typedPages: true,
+  },
+  compatibilityDate: '2024-04-03',
 
-  modules: ['@nuxt/eslint', '@vueuse/nuxt', 'reka-ui/nuxt']
+  nitro: {
+    experimental: {
+      tasks: true,
+    },
+  },
+  eslint: {
+    config: {
+      stylistic: true,
+    },
+  },
 })
