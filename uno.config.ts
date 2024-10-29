@@ -36,12 +36,14 @@ export default defineConfig({
       h6 {
           font-size: ${theme.fontSize.lg[0]};
       }
-      ` },
+      `, layer: 'base' },
   ],
+
   theme: {
     fontFamily: {
-      display: ['Vollkorn', 'serif'],
-      body: ['Lora', 'serif'],
+      display: ['Bebas Neue', 'serif'],
+      body: ['Work Sans', 'sans-serif'],
+      mono: ['DM Mono', 'monspace'],
     },
     borderRadius: {
       DEFAULT: '0.5rem',

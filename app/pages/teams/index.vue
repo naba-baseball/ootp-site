@@ -13,9 +13,9 @@ const teamsByDivision = Object.groupBy(teams.value, ({ division_name }) => divis
         :key="division"
         class="prose max-w-full"
       >
-        <h2>
+        <div>
           {{ division }}
-        </h2>
+        </div>
         <hr class="h-2px w-1/2 my-0 bg-black">
         <ul class="ps-0 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           <li

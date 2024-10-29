@@ -13,9 +13,9 @@ const { team, players, topEra } = data.value
           alt="Player photo"
           class="w-67px h-100px"
         >
-        <h2 class="text-lg">
+        <div class="uppercase tracking-wide text-sm">
           Team Leaders AVG
-        </h2 class="text-lg">
+        </div>
         <ul>
           <li />
           <li />
@@ -29,17 +29,14 @@ const { team, players, topEra } = data.value
           class="w-67px h-100px"
         >
         <div class="w-full">
-          <h2 class="text-lg">
+          <div class="uppercase tracking-wide text-base font-bold text-gray-11">
             Team Leaders HR
-          </h2 class="text-lg">
-          <ul class="font-normal">
-            <li
-              v-for="p of topEra"
-              :key="p.player_id"
-              class="tabular-nums grid grid-flow-col justify-between w-full"
-            >
-              <span>{{ p.player_name }}</span> <span class="font-mono tabular-nums">{{ p.era }}</span>
-            </li>
+          </div>
+          <ul>
+            <li />
+            <li />
+            <li />
+            <li />
           </ul>
         </div>
       </div>
@@ -48,9 +45,9 @@ const { team, players, topEra } = data.value
           alt="Player photo"
           class="w-67px h-100px"
         >
-        <h2 class="text-lg">
+        <div class="text-lg">
           Team Leaders RBI
-        </h2 class="text-lg">
+        </div>
         <ul>
           <li />
           <li />
@@ -63,9 +60,9 @@ const { team, players, topEra } = data.value
           alt="Player photo"
           class="w-67px h-100px"
         >
-        <h2 class="text-lg">
+        <div class="text-lg">
           Team Leaders W
-        </h2 class="text-lg">
+        </div>
         <ul>
           <li />
           <li />
@@ -78,14 +75,17 @@ const { team, players, topEra } = data.value
           alt="Player photo"
           class="w-67px h-100px"
         >
-        <h2 class="text-lg">
+        <div class="text-lg">
           Team Leaders ERA
-        </h2 class="text-lg">
-        <ul>
-          <li />
-          <li />
-          <li />
-          <li />
+        </div>
+        <ul class="font-normal">
+          <li
+            v-for="p of topEra"
+            :key="p.player_id"
+            class="tabular-nums grid grid-flow-col justify-between w-full"
+          >
+            <span>{{ p.player_name }}</span> <span class="font-mono tabular-nums">{{ p.era }}</span>
+          </li>
         </ul>
       </div>
       <div>
@@ -93,9 +93,9 @@ const { team, players, topEra } = data.value
           alt="Player photo"
           class="w-67px h-100px"
         >
-        <h2 class="text-lg">
+        <div class="text-lg">
           Team Leaders K
-        </h2 class="text-lg">
+        </div>
         <ul>
           <li />
           <li />

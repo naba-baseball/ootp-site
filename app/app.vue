@@ -12,6 +12,11 @@
       >
         Teams
       </NuxtLink>
+      <NuxtLink
+        to="/upload"
+      >
+        Upload
+      </NuxtLink>
     </nav>
     <NuxtRouteAnnouncer />
     <article>

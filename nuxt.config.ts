@@ -29,10 +29,17 @@ export default defineNuxtConfig({
   },
   experimental: {
     typedPages: true,
+    viewTransition: true,
   },
   compatibilityDate: '2024-04-03',
 
   nitro: {
+    storage: {
+      csv: {
+        driver: 'fs',
+        base: '.data/csv',
+      },
+    },
     experimental: {
       tasks: true,
     },
