@@ -1,7 +1,11 @@
+<script setup lang="ts">
+</script>
+
 <template>
   <Html class="text-gray-12 bg-gray-1A" />
   <main class="container mx-auto">
     <nav class="*:text-xl">
+      <YearSelect />
       <NuxtLink
         to="/"
       >

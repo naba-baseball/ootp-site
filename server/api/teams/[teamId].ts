@@ -2,17 +2,19 @@ import type { Player, PlayerCareerPitchingStats, Team } from '~~/types.js'
 
 export default defineEventHandler(async (event) => {
   const teamId = getRouterParam(event, 'teamId')
-  const [[team], topEra] = await Promise.all([
-    useDB().all<Team[]>(
+  const { year } = await getFilterPreferences(event)
+  const [[team], players, topEra] = await Promise.all([
+    useDB().all<Team>(
       `select name, nickname from teams where team_id = $1`,
       teamId,
     ),
+    useDB().all<Player>(`select player_id, first_name || ' ' || last_name as player_name from players where team_id = $1`, teamId),
     useDB().all<Array<Pick<PlayerCareerPitchingStats, 'year' | 'player_id'> & { player_name: string, era: number }>>(
       `
-      select 
-      players.first_name || ' ' || players.last_name as player_name, 
+      select
+      players.first_name || ' ' || players.last_name as player_name,
       9 * playerStats.r/playerStats.ip as era from (
-      select 
+      select
       stats.player_id,
       stats.team_id,
       stats.year,
@@ -20,11 +22,12 @@ export default defineEventHandler(async (event) => {
       stats.ip,
       stats.k,
       stats.w,
-    from players_career_pitching_stats as stats where stats.team_id = $1
+    from players_career_pitching_stats as stats where stats.team_id = $1 and stats.year = $2 and stats.split_id = 1
     ) as playerStats
-    right join players on players.player_id = playerStats.player_id and players.team_id = playerStats.team_id 
-    where playerStats.team_id = $1 order by year desc, era asc limit 4`,
+    right join players on players.player_id = playerStats.player_id and players.team_id = playerStats.team_id
+    where players.role = 11 order by era asc limit 4`,
       teamId,
+      year,
     )])
-  return { team, topEra: topEra.map(res => ({ ...res, era: Number(res.era.toFixed(2)) })) }
+  return { team: team!, players, topEra: topEra.map(res => ({ ...res, era: Number(res.era?.toFixed(2)) })) }
 })

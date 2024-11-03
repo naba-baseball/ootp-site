@@ -1,11 +1,21 @@
 <script setup lang="ts">
-const { data } = await useFetch(`/api/teams/${useRoute().params.teamId}`)
-if (!data.value) throw new Error('Team data not found')
-const { team, players, topEra } = data.value
+const teamId = useRoute().params.teamId
+const { data, status } = useQuery({
+  key: ['team', teamId],
+  query: () => useRequestFetch()(`/api/teams/${teamId}`),
+})
+const team = toRef(() => data.value.team)
+const topEra = toRef(() => data.value.topEra)
 </script>
 
 <template>
-  <div class="max-w-full">
+  <div v-if="status !== 'success'">
+    Loading...
+  </div>
+  <div
+    v-else
+    class="max-w-full"
+  >
     <h1>{{ team.name }} {{ team.nickname }}</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 [&>*]:(h-12em bg-gray-1A border border-gray-2A p-6 rounded text-xl font-bold flex gap-3)">
       <div>

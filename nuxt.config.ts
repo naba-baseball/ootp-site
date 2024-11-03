@@ -8,6 +8,9 @@ export default defineNuxtConfig({
     '@nuxtjs/html-validator',
     '@unocss/nuxt',
     '@nuxt/fonts',
+    'nuxt-auth-utils',
+    '@pinia/nuxt',
+    '@pinia/colada-nuxt',
   ],
   devtools: { enabled: true },
   app: {
@@ -36,8 +39,12 @@ export default defineNuxtConfig({
   nitro: {
     storage: {
       csv: {
-        driver: 'fs',
+        driver: 'fsLite',
         base: '.data/csv',
+      },
+      config: {
+        driver: 'fsLite',
+        base: '.data/config',
       },
     },
     experimental: {

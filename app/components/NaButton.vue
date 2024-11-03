@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { is = 'button' } = defineProps<{ is: 'button' | string }>()
+const { is = 'button' } = defineProps<{ is?: 'button' | string }>()
 </script>
 
 <template>
