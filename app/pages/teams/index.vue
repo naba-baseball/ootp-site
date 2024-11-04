@@ -29,13 +29,13 @@ const teamsByDivision = computed(() => teams.value ? Object.groupBy(teams.value,
             <div class="flex gap-3">
               <nuxt-link :to="`/teams/${team.team_id}`">
                 Home page
-              </nuxt-link>|
+              </nuxt-link>
               <nuxt-link to="/coming-soon">
                 Leaders
-              </nuxt-link>|
+              </nuxt-link>
               <nuxt-link to="/coming-soon">
                 Roster
-              </nuxt-link>|
+              </nuxt-link>
               <nuxt-link to="/coming-soon">
                 Schedule
               </nuxt-link>
