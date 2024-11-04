@@ -36,28 +36,32 @@ const getItemValue = (item: T) => {
 
 <template>
   <div>
-    <img
+    <!-- <img
+      src=""
       alt="Player photo"
       class="w-67px h-100px"
-    >
-    <div class="text-lg">
-      <slot name="title">
-        {{ title }}
-      </slot>
-    </div>
-    <ul class="font-normal">
-      <slot
-        v-for="(item, index) of items"
-        name="list-item"
-      >
-        <li
-          :key="ids[index]"
-          class="tabular-nums grid grid-flow-col justify-between w-full"
+    > -->
+    <div class="w-full">
+      <span class="text-lg">
+        <slot name="title">
+          {{ title }}
+        </slot>
+      </span>
+      <ul class="font-normal">
+        <slot
+          v-for="(item, index) of items"
+          name="list-item"
         >
-          <span>{{ getItemTitle(item) }}</span> <span class="font-mono tabular-nums">{{ getItemValue(item) }}</span>
-        </li>
-      </slot>
-    </ul>
+          <li
+            :key="ids[index]"
+            class="tabular-nums justify-between"
+            grid="~ flow-col"
+          >
+            <span>{{ getItemTitle(item) }}</span> <span class="font-mono tabular-nums">{{ getItemValue(item) }}</span>
+          </li>
+        </slot>
+      </ul>
+    </div>
   </div>
 </template>
 

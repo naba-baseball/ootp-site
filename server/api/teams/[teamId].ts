@@ -65,7 +65,7 @@ export default defineEventHandler(async (event) => {
       `
       select
       players.first_name || ' ' || players.last_name as player_name,
-      round(playerStats.h / playerStats.ab, 2) as avg from (
+      round(playerStats.h / playerStats.ab, 3) as avg from (
       select
       stats.player_id,
       stats.team_id,
