@@ -4,8 +4,13 @@ const { data, status } = useQuery({
   key: ['team', teamId],
   query: () => useRequestFetch()(`/api/teams/${teamId}`),
 })
-const team = toRef(() => data.value.team)
-const topEra = toRef(() => data.value.topEra)
+const team = toRef(() => data.value?.team ?? [])
+const topEra = toRef(() => data.value?.topEra ?? [])
+const topK = toRef(() => data.value?.topK ?? [])
+const topW = toRef(() => data.value?.topW ?? [])
+const topAvg = toRef(() => data.value?.topAvg ?? [])
+const topHr = toRef(() => data.value?.topHr ?? [])
+const topRbi = toRef(() => data.value?.topRbi ?? [])
 </script>
 
 <template>
@@ -18,101 +23,48 @@ const topEra = toRef(() => data.value.topEra)
   >
     <h1>{{ team.name }} {{ team.nickname }}</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 [&>*]:(h-12em bg-gray-1A border border-gray-2A p-6 rounded text-xl font-bold flex gap-3)">
-      <div>
-        <img
-          alt="Player photo"
-          class="w-67px h-100px"
-        >
-        <div class="uppercase tracking-wide text-sm">
-          Team Leaders AVG
-        </div>
-        <ul>
-          <li />
-          <li />
-          <li />
-          <li />
-        </ul>
-      </div>
-      <div class="">
-        <img
-          alt="Player photo"
-          class="w-67px h-100px"
-        >
-        <div class="w-full">
-          <div class="uppercase tracking-wide text-base font-bold text-gray-11">
-            Team Leaders HR
-          </div>
-          <ul>
-            <li />
-            <li />
-            <li />
-            <li />
-          </ul>
-        </div>
-      </div>
-      <div>
-        <img
-          alt="Player photo"
-          class="w-67px h-100px"
-        >
-        <div class="text-lg">
-          Team Leaders RBI
-        </div>
-        <ul>
-          <li />
-          <li />
-          <li />
-          <li />
-        </ul>
-      </div>
-      <div>
-        <img
-          alt="Player photo"
-          class="w-67px h-100px"
-        >
-        <div class="text-lg">
-          Team Leaders W
-        </div>
-        <ul>
-          <li />
-          <li />
-          <li />
-          <li />
-        </ul>
-      </div>
-      <div>
-        <img
-          alt="Player photo"
-          class="w-67px h-100px"
-        >
-        <div class="text-lg">
-          Team Leaders ERA
-        </div>
-        <ul class="font-normal">
-          <li
-            v-for="p of topEra"
-            :key="p.player_id"
-            class="tabular-nums grid grid-flow-col justify-between w-full"
-          >
-            <span>{{ p.player_name }}</span> <span class="font-mono tabular-nums">{{ p.era }}</span>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <img
-          alt="Player photo"
-          class="w-67px h-100px"
-        >
-        <div class="text-lg">
-          Team Leaders K
-        </div>
-        <ul>
-          <li />
-          <li />
-          <li />
-          <li />
-        </ul>
-      </div>
+      <TeamTopStat
+        :items="topAvg"
+        title="Team Leaders AVG"
+        item-key="player_id"
+        item-title="player_name"
+        item-value="avg"
+      />
+      <TeamTopStat
+        :items="topHr"
+        title="Team Leaders HR"
+        item-key="player_id"
+        item-title="player_name"
+        item-value="hr"
+      />
+      <TeamTopStat
+        :items="topRbi"
+        title="Team Leaders RBI"
+        item-key="player_id"
+        item-title="player_name"
+        item-value="rbi"
+      />
+      <TeamTopStat
+        :items="topW"
+        title="Team Leaders W"
+        item-key="player_id"
+        item-title="player_name"
+        item-value="w"
+      />
+      <TeamTopStat
+        :items="topEra"
+        title="Team Leaders ERA"
+        item-key="player_id"
+        item-title="player_name"
+        item-value="era"
+      />
+      <TeamTopStat
+        :items="topK"
+        title="Team Leaders K"
+        item-key="player_id"
+        item-title="player_name"
+        item-value="k"
+      />
     </div>
   </div>
 </template>
