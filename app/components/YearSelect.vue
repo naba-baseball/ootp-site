@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 const { session } = useUserSession()
-const cache = useQueryCache()
+const cache = useQueryClient()
 const { mutate } = useMutation({
-  mutation: (year: number) => $fetch('/api/session', { method: 'patch', body: { year } }),
+  mutationFn: (year: number) => $fetch('/api/session', { method: 'patch', body: { year } }),
   onSuccess: () => {
-    cache.invalidateQueries({ key: ['team'] })
+    cache.invalidateQueries({ queryKey: ['team'] })
   },
 })
 watch(() => session.value.year, (year) => {

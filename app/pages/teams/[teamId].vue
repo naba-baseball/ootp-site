@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const teamId = useRoute().params.teamId
 const { data, status } = useQuery({
-  key: ['team', teamId],
-  query: () => useRequestFetch()(`/api/teams/${teamId}`),
+  queryKey: ['team', teamId],
+  queryFn: () => useRequestFetch()(`/api/teams/${teamId}`),
 })
 const team = toRef(() => data.value?.team ?? [])
 const topEra = toRef(() => data.value?.topEra ?? [])

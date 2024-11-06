@@ -9,8 +9,7 @@ export default defineNuxtConfig({
     '@unocss/nuxt',
     '@nuxt/fonts',
     'nuxt-auth-utils',
-    '@pinia/nuxt',
-    '@pinia/colada-nuxt',
+    '@hebilicious/vue-query-nuxt',
   ],
   devtools: { enabled: true },
   app: {

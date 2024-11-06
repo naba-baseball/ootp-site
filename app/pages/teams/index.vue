@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const { data: teams } = useQuery({ key: ['teams'], query: () => useRequestFetch()('/api/teams') })
+const { data: teams } = useQuery({ queryKey: ['teams'], queryFn: () => useRequestFetch()('/api/teams') })
 const teamsByDivision = computed(() => teams.value ? Object.groupBy(teams.value, ({ division_name }) => division_name) : [])
 </script>
 
