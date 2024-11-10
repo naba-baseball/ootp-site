@@ -4,7 +4,7 @@ const { data, status } = useQuery({
   queryKey: ['team', teamId],
   queryFn: () => useRequestFetch()(`/api/teams/${teamId}`),
 })
-const team = toRef(() => data.value?.team ?? [])
+const team = toRef(() => data.value?.team)
 const topEra = toRef(() => data.value?.topEra ?? [])
 const topK = toRef(() => data.value?.topK ?? [])
 const topW = toRef(() => data.value?.topW ?? [])
@@ -18,48 +18,48 @@ const topRbi = toRef(() => data.value?.topRbi ?? [])
     Loading...
   </div>
   <div v-else>
-    <h1>{{ team.name }} {{ team.nickname }}</h1>
+    <h1>{{ team!.name }} {{ team!.nickname }}</h1>
     <div class="grid grid-cols-[repeat(3,320px)] gap-6 [&>*]:(h-12em bg-gray-1A border border-gray-2A p-6 rounded font-bold flex gap-3)">
       <TeamTopStat
         :items="topAvg"
         title="Team Leaders AVG"
-        item-key="player_id"
-        item-title="player_name"
+        item-key="playerId"
+        item-title="playerName"
         :item-value="i => `${i.avg}`.padEnd(5, '0')"
       />
       <TeamTopStat
         :items="topHr"
         title="Team Leaders HR"
-        item-key="player_id"
-        item-title="player_name"
+        item-key="playerId"
+        item-title="playerName"
         item-value="hr"
       />
       <TeamTopStat
         :items="topRbi"
         title="Team Leaders RBI"
-        item-key="player_id"
-        item-title="player_name"
+        item-key="playerId"
+        item-title="playerName"
         item-value="rbi"
       />
       <TeamTopStat
         :items="topW"
         title="Team Leaders W"
-        item-key="player_id"
-        item-title="player_name"
+        item-key="playerId"
+        item-title="playerName"
         item-value="w"
       />
       <TeamTopStat
         :items="topEra"
         title="Team Leaders ERA"
-        item-key="player_id"
-        item-title="player_name"
+        item-key="playerId"
+        item-title="playerName"
         item-value="era"
       />
       <TeamTopStat
         :items="topK"
         title="Team Leaders K"
-        item-key="player_id"
-        item-title="player_name"
+        item-key="playerId"
+        item-title="playerName"
         item-value="k"
       />
     </div>

@@ -1,10 +1,10 @@
-import type { Team } from '~~/types.js'
+import { eq } from 'drizzle-orm'
+import { divisions, teams } from '~~/server/drizzle/schema.js'
 
-export default defineEventHandler(async () => {
-  await useDB().run(`create index if not exists teams_division_id on teams(division_id)`)
-  await useDB().run(`create index if not exists divisions_division_id on divisions(division_id, league_id, sub_league_id)`)
-  const teams = await useDB().all<Pick<Team, 'name' | 'nickname' | 'team_id'> & { division_name: string }>(
-    `select t.name, t.nickname, t.team_id, d.name as division_name, from teams as t left join divisions as d on t.division_id = d.division_id and t.league_id = d.league_id and t.sub_league_id = d.sub_league_id`,
-  )
-  return teams
+export default defineEventHandler(async (event) => {
+  const { name, nickname, teamId } = teams
+  return useDrizzle(event)
+    .select({ name, nickname, teamId, division: { name: divisions.name } })
+    .from(teams)
+    .leftJoin(divisions, eq(teams.divisionId, divisions.divisionId))
 })

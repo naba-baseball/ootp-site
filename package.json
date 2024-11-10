@@ -11,18 +11,20 @@
   },
   "dependencies": {
     "@hebilicious/vue-query-nuxt": "^0.3.0",
-    "@nuxt/eslint": "^0.6.0",
+    "@nuxt/eslint": "^0.6.1",
     "@nuxt/fonts": "^0.10.2",
     "@nuxtjs/html-validator": "^1.8.2",
-    "@tanstack/vue-query": "^5.59.17",
-    "@unocss/nuxt": "^0.63.6",
-    "@unocss/reset": "^0.63.6",
-    "@vueuse/nuxt": "^11.1.0",
-    "duckdb": "^1.1.1",
+    "@tanstack/vue-query": "^5.59.20",
+    "@unocss/nuxt": "^0.64.0",
+    "@unocss/reset": "^0.64.0",
+    "@vueuse/nuxt": "^11.2.0",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.36.1",
     "h3": "^1.13.0",
-    "nuxt": "^3.13.2",
-    "nuxt-auth-utils": "^0.5.1",
-    "reka-ui": "^1.0.0-alpha.1",
+    "mysql2": "^3.11.4",
+    "nuxt": "^3.14.159",
+    "nuxt-auth-utils": "^0.5.2",
+    "reka-ui": "^1.0.0-alpha.4",
     "valibot": "^0.42.1",
     "vue": "latest",
     "vue-router": "latest"
@@ -31,8 +33,10 @@
     "vue": "latest"
   },
   "devDependencies": {
+    "drizzle-kit": "^0.28.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.6.3",
-    "unocss": "^0.63.6",
+    "unocss": "^0.64.0",
     "unocss-preset-radix": "^2.5.5"
   }
 }

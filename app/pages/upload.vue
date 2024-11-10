@@ -9,7 +9,7 @@
     enctype="multipart/form-data"
   >
     <label>
-      Upload CSV Files
+      Upload SQL Files
       <input
         name="files"
         multiple

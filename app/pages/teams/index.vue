@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 const { data: teams } = useQuery({ queryKey: ['teams'], queryFn: () => useRequestFetch()('/api/teams') })
-const teamsByDivision = computed(() => teams.value ? Object.groupBy(teams.value, ({ division_name }) => division_name) : [])
+const teamsByDivision = computed(() => teams.value ? Object.groupBy(teams.value, ({ division }) => division!.name!) : [])
 </script>
 
 <template>
@@ -19,7 +19,7 @@ const teamsByDivision = computed(() => teams.value ? Object.groupBy(teams.value,
         <ul class="ps-0 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           <li
             v-for="team of divisionTeams"
-            :key="team.team_id"
+            :key="team.teamId"
             class="list-none"
           >
             <!-- <img :src="`${useRuntimeConfig().public.ootpWebsiteUrl}/images/team_logos/${team.logo_file_name}`" :alt="`${ team.name } ${team.nickname} logo`"  > -->
@@ -27,7 +27,7 @@ const teamsByDivision = computed(() => teams.value ? Object.groupBy(teams.value,
               {{ team.name }} {{ team.nickname }}
             </h2>
             <div class="flex gap-3">
-              <nuxt-link :to="`/teams/${team.team_id}`">
+              <nuxt-link :to="`/teams/${team.teamId}`">
                 Home page
               </nuxt-link>
               <nuxt-link to="/coming-soon">

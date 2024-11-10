@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@vueuse/nuxt',
     'reka-ui/nuxt',
-    '@nuxtjs/html-validator',
+    // '@nuxtjs/html-validator',
     '@unocss/nuxt',
     '@nuxt/fonts',
     'nuxt-auth-utils',
@@ -22,6 +22,7 @@ export default defineNuxtConfig({
   },
   css: ['@unocss/reset/tailwind.css'],
   runtimeConfig: {
+    databaseUrl: '',
     public: {
       ootpWebsiteUrl: '',
     },
@@ -37,14 +38,18 @@ export default defineNuxtConfig({
 
   nitro: {
     storage: {
-      csv: {
+      uploads: {
         driver: 'fsLite',
-        base: '.data/csv',
+        base: '.data/uploads',
       },
       config: {
         driver: 'fsLite',
         base: '.data/config',
       },
+      scripts: {
+        driver: 'fsLite',
+        base: 'scripts'
+      }
     },
     experimental: {
       tasks: true,

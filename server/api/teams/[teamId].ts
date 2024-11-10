@@ -1,119 +1,148 @@
-import type { Player, PlayerCareerBattingStats, PlayerCareerPitchingStats, Team } from '~~/types.js'
+import {
+  players,
+  playersCareerBattingStats as batting,
+  playersCareerPitchingStats as pitching,
+  teams,
+} from "~~/server/drizzle/schema.js";
+import { and, asc, desc, eq, gt, sql } from "drizzle-orm";
+import { MySqlSelectBuilder } from "drizzle-orm/mysql-core";
 
 export default defineEventHandler(async (event) => {
-  const teamId = getRouterParam(event, 'teamId')
-  const { year } = await getFilterPreferences(event)
-  const [[team], players, topEra, topW, topK, topAvg, topHr, topRbi] = await Promise.all([
-    useDB().all<Team>(
-      `select name, nickname from teams where team_id = $1`,
-      teamId,
-    ),
-    useDB().all<Player>(`select player_id, first_name || ' ' || last_name as player_name from players where team_id = $1`, teamId),
-    useDB().all<Pick<PlayerCareerPitchingStats, 'year' | 'player_id'> & { player_name: string, era: number }>(
-      `
-      select
-      players.first_name || ' ' || players.last_name as player_name,
-      round(9 * playerStats.r/playerStats.ip, 2) as era from (
-      select
-      stats.player_id,
-      stats.team_id,
-      stats.year,
-      stats.r,
-      stats.ip,
-    from players_career_pitching_stats as stats where stats.team_id = $1 and stats.year = $2 and stats.split_id = 1
-    ) as playerStats
-    right join players on players.player_id = playerStats.player_id and players.team_id = playerStats.team_id
-    where players.role = 11 order by era asc limit 4`,
-      teamId,
-      year,
-    ),
-    useDB().all<Pick<PlayerCareerPitchingStats, 'year' | 'player_id'> & { player_name: string, w: number }>(
-      `
-      select
-      players.first_name || ' ' || players.last_name as player_name,
-      w from (
-      select
-      stats.player_id,
-      stats.team_id,
-      stats.year,
-      stats.w,
-    from players_career_pitching_stats as stats where stats.team_id = $1 and stats.year = $2 and stats.split_id = 1
-    ) as playerStats
-    right join players on players.player_id = playerStats.player_id and players.team_id = playerStats.team_id
-    where players.role = 11 order by w desc limit 4`,
-      teamId,
-      year,
-    ),
-    useDB().all<Pick<PlayerCareerPitchingStats, 'year' | 'player_id'> & { player_name: string, k: number }>(
-      `
-      select
-      players.first_name || ' ' || players.last_name as player_name,
-      k from (
-      select
-      stats.player_id,
-      stats.team_id,
-      stats.year,
-      stats.k,
-    from players_career_pitching_stats as stats where stats.team_id = $1 and stats.year = $2 and stats.split_id = 1
-    ) as playerStats
-    right join players on players.player_id = playerStats.player_id and players.team_id = playerStats.team_id
-    where players.role = 11 order by k desc limit 4`,
-      teamId,
-      year,
-    ),
-    useDB().all<Pick<PlayerCareerBattingStats, 'year' | 'player_id'> & { player_name: string, avg: number }>(
-      `
-      select
-      players.first_name || ' ' || players.last_name as player_name,
-      round(playerStats.h / playerStats.ab, 3) as avg from (
-      select
-      stats.player_id,
-      stats.team_id,
-      stats.year,
-      stats.h,
-      stats.ab
-    from players_career_batting_stats as stats where stats.team_id = $1 and stats.year = $2 and stats.split_id = 1 and stats.ab > 0
-    ) as playerStats
-    right join players on players.player_id = playerStats.player_id and players.team_id = playerStats.team_id
-    order by avg desc limit 4`,
-      teamId,
-      year,
-    ),
-    useDB().all<Pick<PlayerCareerBattingStats, 'year' | 'player_id'> & { player_name: string, hr: number }>(
-      `
-      select
-      players.first_name || ' ' || players.last_name as player_name,
-      hr from (
-      select
-      stats.player_id,
-      stats.team_id,
-      stats.year,
-      stats.hr
-    from players_career_batting_stats as stats where stats.team_id = $1 and stats.year = $2 and stats.split_id = 1 and stats.ab > 0
-    ) as playerStats
-    right join players on players.player_id = playerStats.player_id and players.team_id = playerStats.team_id
-    order by hr desc limit 4`,
-      teamId,
-      year,
-    ),
-    useDB().all<Pick<PlayerCareerBattingStats, 'year' | 'player_id'> & { player_name: string, rbi: number }>(
-      `
-      select
-      players.first_name || ' ' || players.last_name as player_name,
-      rbi from (
-      select
-      stats.player_id,
-      stats.team_id,
-      stats.year,
-      stats.rbi
-    from players_career_batting_stats as stats where stats.team_id = $1 and stats.year = $2 and stats.split_id = 1 and stats.ab > 0
-    ) as playerStats
-    right join players on players.player_id = playerStats.player_id and players.team_id = playerStats.team_id
-    order by rbi desc limit 4`,
-      teamId,
-      year,
-    ),
-  ])
+  const teamId = Number(getRouterParam(event, "teamId"));
+  const { year } = await getFilterPreferences(event);
+  const db = useDrizzle(event);
+  const playerData = () => ({
+    playerName: sql`concat(${players.firstName}, ' ', ${players.lastName})`,
+    playerId: players.playerId,
+  });
+  const [[team], playersRes, topEra, topW, topK, topAvg, topHr, topRbi] =
+    await Promise.all([
+      db.select({ name: teams.name, nickname: teams.nickname }).from(teams)
+        .where(eq(teams.teamId, teamId)),
+      db.select(playerData())
+        .from(players).where(eq(players.teamId, teamId)),
+      // ERA
+      db.select({
+        ...playerData(),
+        era: sql`cast(round(9 * ${pitching.r}/${pitching.ip}, 2) as float)`.as(
+          "era",
+        ),
+      }).from(pitching)
+        .rightJoin(
+          players,
+          and(eq(pitching.playerId, players.playerId), eq(players.role, 11)),
+        )
+        .where(
+          and(
+            eq(pitching.teamId, teamId),
+            eq(pitching.splitId, 1),
+            eq(pitching.year, year),
+          ),
+        )
+        .orderBy(asc(sql`era`)).limit(4),
+      // W
+      db.select({
+        ...playerData(),
+        w: pitching.w,
+      }).from(pitching)
+        .rightJoin(
+          players,
+          and(eq(pitching.playerId, players.playerId), eq(players.role, 11)),
+        )
+        .where(
+          and(
+            eq(pitching.teamId, teamId),
+            eq(pitching.splitId, 1),
+            eq(pitching.year, year),
+          ),
+        )
+        .orderBy(asc(pitching.w)).limit(4),
+      // K
+      db.select({
+        ...playerData(),
+        k: pitching.k,
+      }).from(pitching)
+        .rightJoin(
+          players,
+          and(eq(pitching.playerId, players.playerId), eq(players.role, 11)),
+        )
+        .where(
+          and(
+            eq(pitching.teamId, teamId),
+            eq(pitching.splitId, 1),
+            eq(pitching.year, year),
+          ),
+        )
+        .orderBy(asc(pitching.k)).limit(4),
+      // AVG
+      db.select({
+        ...playerData(),
+        avg: sql`cast(round(${batting.h} / ${batting.ab}, 3) as float)`.as(
+          "avg",
+        ),
+      })
+        .from(batting)
+        .rightJoin(
+          players,
+          and(eq(batting.playerId, players.playerId)),
+        )
+        .where(
+          and(
+            eq(batting.teamId, teamId),
+            eq(batting.splitId, 1),
+            eq(batting.year, year),
+            gt(batting.ab, 10),
+          ),
+        )
+        .orderBy(desc(sql`avg`)).limit(4),
+      // HR
+      db.select({
+        ...playerData(),
+        hr: batting.hr,
+      })
+        .from(batting)
+        .rightJoin(
+          players,
+          and(eq(batting.playerId, players.playerId)),
+        )
+        .where(
+          and(
+            eq(batting.teamId, teamId),
+            eq(batting.splitId, 1),
+            eq(batting.year, year),
+            gt(batting.ab, 10),
+          ),
+        )
+        .orderBy(desc(batting.hr)).limit(4),
+      // RBI
+      db.select({
+        ...playerData(),
+        rbi: batting.rbi,
+      })
+        .from(batting)
+        .rightJoin(
+          players,
+          and(eq(batting.playerId, players.playerId)),
+        )
+        .where(
+          and(
+            eq(batting.teamId, teamId),
+            eq(batting.splitId, 1),
+            eq(batting.year, year),
+            gt(batting.ab, 10),
+          ),
+        )
+        .orderBy(desc(batting.rbi)).limit(4),
+    ]);
 
-  return { team: team, players, topEra, topW, topK, topAvg, topHr, topRbi }
-})
+  return {
+    team,
+    players: playersRes,
+    topEra,
+    topW,
+    topK,
+    topAvg,
+    topHr,
+    topRbi,
+  };
+});
