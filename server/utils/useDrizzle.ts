@@ -1,11 +1,12 @@
 import { drizzle } from 'drizzle-orm/mysql2'
 import type { H3Event } from 'h3'
+import * as schema from '~~/server/drizzle/schema.js'
 
 let db: ReturnType<typeof drizzle> | null = null
 export const useDrizzle = (event: H3Event) => {
   if (!db) {
     const config = useRuntimeConfig(event)
-    db = drizzle(config.databaseUrl)
+    db = drizzle(config.databaseUrl, { schema, mode: 'default' })
   }
   return db
 }

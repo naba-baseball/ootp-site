@@ -1,5 +1,5 @@
 import { mysqlTable, int, varchar, double, smallint, date, mysqlView, decimal, tinyint } from 'drizzle-orm/mysql-core'
-import { sql } from 'drizzle-orm'
+import { relations, sql } from 'drizzle-orm'
 
 export const cities = mysqlTable('cities', {
   cityId: int('city_id').notNull(),
@@ -2655,3 +2655,11 @@ export const battingRatingsNormalized = mysqlView('batting_ratings_normalized', 
   potentialStrikeouts: decimal('potential_strikeouts', { precision: 11, scale: 0 }),
   potentialPower: decimal('potential_power', { precision: 11, scale: 0 }),
 }).algorithm('undefined').sqlSecurity('definer').as(sql`select 5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_overall_contact\` / (50 / 3),0) + 20 AS \`overall_contact\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_overall_gap\` / (50 / 3),0) + 20 AS \`overall_gap\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_overall_eye\` / (50 / 3),0) + 20 AS \`overall_eye\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_overall_strikeouts\` / (50 / 3),0) + 20 AS \`overall_strikeouts\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_overall_power\` / (50 / 3),0) + 20 AS \`overall_power\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_overall_babip\` / (50 / 3),0) + 20 AS \`overall_babip\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_vsr_contact\` / (50 / 3),0) + 20 AS \`vsr_contact\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_vsr_gap\` / (50 / 3),0) + 20 AS \`vsr_gap\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_vsr_eye\` / (50 / 3),0) + 20 AS \`vsr_eye\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_vsr_strikeouts\` / (50 / 3),0) + 20 AS \`vsr_strikeouts\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_vsr_power\` / (50 / 3),0) + 20 AS \`vsr_power\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_vsl_contact\` / (50 / 3),0) + 20 AS \`vsl_contact\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_vsl_gap\` / (50 / 3),0) + 20 AS \`vsl_gap\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_vsl_eye\` / (50 / 3),0) + 20 AS \`vsl_eye\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_vsl_strikeouts\` / (50 / 3),0) + 20 AS \`vsl_strikeouts\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_vsl_power\` / (50 / 3),0) + 20 AS \`vsl_power\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_talent_contact\` / (50 / 3),0) + 20 AS \`potential_contact\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_talent_gap\` / (50 / 3),0) + 20 AS \`potentialÏ_gap\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_talent_eye\` / (50 / 3),0) + 20 AS \`potential_eye\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_talent_strikeouts\` / (50 / 3),0) + 20 AS \`potential_strikeouts\`,5 * truncate(\`naba\`.\`players_batting\`.\`batting_ratings_talent_power\` / (50 / 3),0) + 20 AS \`potential_power\` from \`naba\`.\`players_batting\``)
+
+// RELATIONS
+export const playersRelations = relations(players, ({ many }) => ({
+  careerPitchingStats: many(playersCareerPitchingStats),
+}))
+export const playersCareerPitchingStatsRelations = relations(playersCareerPitchingStats, ({ one }) => ({
+  player: one(players, { fields: [playersCareerPitchingStats.playerId], references: [players.playerId] }),
+}))
