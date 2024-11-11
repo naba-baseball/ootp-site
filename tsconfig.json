@@ -4,6 +4,7 @@
   "compilerOptions": {
     "types": [
       "./auth.d.ts"
-    ]
+    ],
+    "allowImportingTsExtensions": true
   }
 }

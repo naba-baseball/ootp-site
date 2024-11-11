@@ -9,7 +9,7 @@ import {
 export default defineEventHandler(async (event) => {
   const teamId = Number(getRouterParam(event, 'teamId'))
   const { year } = await getFilterPreferences(event)
-  const db = useDrizzle(event)
+  const db = event.context.$db
   const playerData = () => ({
     playerName: sql`concat(${players.firstName}, ' ', ${players.lastName})`,
     playerId: players.playerId,
